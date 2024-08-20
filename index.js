@@ -18,16 +18,19 @@
 var fs = require("fs");
 var path = require("path");
 function contentReader(filePath) {
-    fs.readdirSync(filePath).forEach(function (file) {
-        var fullPath = path.join(filePath, file);
-        var stat = fs.statSync(fullPath);
-        console.log(stat, "stat");
-        if (stat.isDirectory()) {
-            contentReader(fullPath);
-        }
-        else {
-            console.log(" " + fullPath);
-        }
-    });
+    function readDir(currentPath, indent) {
+        fs.readdirSync(currentPath).forEach(function (file) {
+            var fullPath = path.join(currentPath, file);
+            var stat = fs.statSync(fullPath);
+            if (stat.isDirectory()) {
+                console.log("".concat(indent, "\uD83D\uDCC2 ").concat(file));
+                readDir(fullPath, indent + "  ");
+            }
+            else {
+                console.log("".concat(indent, " ").concat(file));
+            }
+        });
+    }
+    readDir(filePath, "");
 }
 contentReader("node_modules");
