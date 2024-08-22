@@ -19,7 +19,9 @@
 const fs = require("fs");
 const path = require("path");
 
-function contentReader(filePath: string) {
+function contentReader(startPath: string) {
+  const resolvedPath = path.resolve(startPath);
+
   function readDir(currentPath: string, indent: string) {
     fs.readdirSync(currentPath).forEach((file: string) => {
       const fullPath: string = path.join(currentPath, file);
@@ -34,7 +36,9 @@ function contentReader(filePath: string) {
     });
   }
 
-  readDir(filePath, "");
+  readDir(resolvedPath, "");
 }
 
-contentReader("node_modules");
+const startPath = "node_modules";
+contentReader(startPath);
+
