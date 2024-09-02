@@ -15,22 +15,30 @@
  Output:
  Directory names should be clearly distinguished from file names.
  The structure should visually represent the hierarchy of directories and files. */
-var fs = require("fs");
-var path = require("path");
-function contentReader(filePath) {
-    function readDir(currentPath, indent) {
-        fs.readdirSync(currentPath).forEach(function (file) {
-            var fullPath = path.join(currentPath, file);
-            var stat = fs.statSync(fullPath);
-            if (stat.isDirectory()) {
-                console.log("".concat(indent, "\uD83D\uDCC2 ").concat(file));
-                readDir(fullPath, indent + "  ");
-            }
-            else {
-                console.log("".concat(indent, " ").concat(file));
-            }
-        });
-    }
-    readDir(filePath, "");
+
+const fs = require("fs");
+const path = require("path");
+
+function contentReader(startPath: string) {
+  const resolvedPath = path.resolve(startPath);
+
+  function readDir(currentPath: string, indent: string) {
+    fs.readdirSync(currentPath).forEach((file: string) => {
+      const fullPath: string = path.join(currentPath, file);
+      const stat = fs.statSync(fullPath);
+
+      if (stat.isDirectory()) {
+        console.log(`${indent}📂 ${file}`);
+        readDir(fullPath, indent + "  ");
+      } else {
+        console.log(`${indent} ${file}`);
+      }
+    });
+  }
+
+  readDir(resolvedPath, "");
 }
-contentReader("node_modules");
+
+const startPath = "node_modules";
+contentReader(startPath);
+
